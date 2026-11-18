@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Quick Message | 너희가 꽃이다 AX</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* 레이아웃: 1280x720 무대를 화면에 맞춰 줄이는 가로 장표. 흰 바탕, 오렌지 한 색, 왼쪽 정렬 큰 제목 */
+:root{
+  --bg:#FFFFFF; --ink:#1F1B18; --sub:#6B6560; --line:#E4E0DB; --soft:#F6F4F1; --accent:#FF6A00; --accent-ink:#B84700; --on-accent:#FFFFFF;
+  --stage-bg:#1f1b18;
+  --sans:'Pretendard Variable',Pretendard,'Noto Sans KR',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--stage-bg);color:var(--ink);font-family:var(--sans);overflow:hidden;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+#wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{width:1920px;height:1080px;position:relative;transform-origin:center center;background:var(--bg);flex:none;overflow:hidden}
+.slide{position:absolute;left:0;top:0;width:1280px;height:720px;transform:scale(1.5);transform-origin:0 0;padding:64px 80px 72px;display:none;flex-direction:column}
+.slide.on{display:flex}
+.kicker{font-family:var(--mono);font-size:20px;letter-spacing:.06em;color:var(--accent-ink);margin:0 0 18px;text-transform:uppercase}
+h1,h2,h3,p,ul,ol{margin:0}
+h1{font-size:84px;font-weight:900;line-height:1.12;letter-spacing:-.03em;text-wrap:balance}
+h2{font-size:52px;font-weight:900;line-height:1.2;letter-spacing:-.025em;text-wrap:balance;word-break:keep-all}
+h3{font-size:28px;font-weight:700;line-height:1.3;letter-spacing:-.01em;word-break:keep-all}
+p,li{font-size:26px;line-height:1.55;color:var(--ink);word-break:keep-all}
+.sub{color:var(--sub)}
+.lead{font-size:30px;color:var(--sub);margin-top:18px;line-height:1.5}
+.acc{color:var(--accent)}
+.ul{box-shadow:inset 0 -.32em 0 rgba(255,106,0,.28)}
+.foot{margin-top:auto;font-size:18px;color:var(--sub);display:flex;justify-content:space-between;gap:24px}
+.body{display:flex;gap:40px;margin-top:34px;flex:1;min-height:0}
+.col{flex:1;min-width:0;display:flex;flex-direction:column;gap:16px}
+.box{background:var(--soft);padding:24px 28px;border-radius:4px}
+.box h3{margin-bottom:8px}
+.box p,.box li{font-size:23px}
+.box.line{background:none;border:2px solid var(--line)}
+.box.hot{background:var(--accent);}
+.box.hot,.box.hot p,.box.hot h3,.box.hot li{color:var(--on-accent)}
+.box.hot ul.d li::before{background:var(--on-accent)}
+.tag{display:inline-block;font-family:var(--mono);font-size:17px;padding:3px 12px;border:2px solid var(--accent);color:var(--accent-ink);border-radius:999px;margin-bottom:10px}
+ul.d{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px}
+ul.d li{padding-left:22px;position:relative;font-size:24px}
+ul.d li::before{content:"";position:absolute;left:0;top:.7em;width:8px;height:8px;background:var(--accent);border-radius:50%}
+.row{display:flex;gap:20px}
+.row>*{flex:1;min-width:0}
+.big{font-size:96px;font-weight:900;color:var(--accent);line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.cap{font-size:20px;color:var(--sub);margin-top:8px;line-height:1.4}
+.agenda{list-style:none;padding:0;margin-top:34px;display:flex;flex-direction:column}
+.agenda li{display:grid;grid-template-columns:64px 1fr 120px;align-items:center;padding:17px 0;border-top:2px solid var(--line);font-size:28px;font-weight:700}
+.agenda li:last-child{border-bottom:2px solid var(--line)}
+.agenda .n{font-family:var(--mono);color:var(--accent-ink);font-size:24px}
+.agenda .t{font-family:var(--mono);color:var(--sub);font-size:22px;text-align:right;font-weight:500}
+.agenda small{display:block;font-size:20px;font-weight:400;color:var(--sub);margin-top:2px}
+.prompt{background:var(--ink);color:var(--bg);border-radius:4px;padding:26px 32px;font-size:23px;line-height:1.65;word-break:keep-all}
+.prompt b{color:var(--accent);font-weight:700}
+.prompt .lab{display:block;font-family:var(--mono);font-size:16px;letter-spacing:.08em;color:var(--accent);margin-bottom:8px}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:13px 16px;border-top:2px solid var(--line);font-size:22px;vertical-align:top;line-height:1.45;word-break:keep-all}
+th{font-family:var(--mono);font-size:16px;color:var(--sub);font-weight:500;letter-spacing:.06em;text-transform:uppercase;border-top:none}
+td:first-child{font-weight:700;white-space:nowrap}
+.tl{display:flex;flex-direction:column;margin-top:30px;border-left:3px solid var(--line);margin-left:6px}
+.tl>div{padding:0 0 18px 28px;position:relative}
+.tl>div::before{content:"";position:absolute;left:-10px;top:12px;width:17px;height:17px;background:var(--accent);border-radius:50%}
+.tl b{font-family:var(--mono);font-size:20px;color:var(--accent-ink);font-weight:500;display:block}
+.tl span{font-size:25px;line-height:1.45;display:block;word-break:keep-all}
+.check{list-style:none;padding:0;display:flex;flex-direction:column;gap:14px}
+.check li{display:flex;gap:18px;align-items:flex-start;font-size:25px;line-height:1.45}
+.check li::before{content:"";flex:none;width:26px;height:26px;border:3px solid var(--accent);border-radius:4px;margin-top:5px}
+.divider{justify-content:center;background:var(--accent)}
+.divider .kicker,.divider h1,.divider p{color:var(--on-accent)}
+.divider p{font-size:30px;margin-top:24px;opacity:.95}
+
+/* 조작부 */
+#ui{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;align-items:center;gap:10px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));z-index:5}
+#ui button{font:500 14px var(--sans);background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:7px 16px;cursor:pointer}
+#ui button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+#ui #pos{font:500 13px var(--mono);color:#a8a09a;min-width:64px;text-align:center}
+@media print{body{overflow:visible}#ui{display:none}}
+@media (prefers-reduced-motion:no-preference){.slide.on{animation:in .25s ease-out}@keyframes in{from{opacity:.0}to{opacity:1}}}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="stage">
+
+<!-- 1 표지 -->
+<section class="slide">
+  <p class="kicker">너희가 꽃이다 AX · Quick Message</p>
+  <h1 style="margin-top:34px">오늘의 AI,<br>내 업무에는<br><span class="acc">어디까지?</span></h1>
+  <p class="lead" style="margin-top:36px">40분 이내로 다섯 가지만 전달합니다.</p>
+  <div class="foot"><span>11월 18일 (수) 밤 11시 · Zoom</span><span>권나윤</span></div>
+</section>
+
+<!-- 2 순서 -->
+<section class="slide">
+  <p class="kicker">오늘의 순서 · 40분</p>
+  <h2>짧게 다섯 가지, 마지막은 질문 하나</h2>
+  <ol class="agenda">
+    <li><span class="n">1</span><span>최근 AI 트렌드, Fable 5.2<small>우리 업무 어디에 쓸까요</small></span><span class="t">7분</span></li>
+    <li><span class="n">2</span><span>첫 강연 이후 2주, 내 스킬 업데이트<small>오늘 바로 해봅니다</small></span><span class="t">10분</span></li>
+    <li><span class="n">3</span><span>클코 세팅과 습관 바로잡기<small>매번 같은 실수를 줄이는 다섯 줄</small></span><span class="t">8분</span></li>
+    <li><span class="n">4</span><span>NY's Case Study, 입반 테스트지<small>프로그램 없이 입반까지</small></span><span class="t">10분</span></li>
+    <li><span class="n">5</span><span>이번 주 Q&amp;A<small>회사 컴퓨터와 집 노트북, 어떻게 연동할까요</small></span><span class="t">5분</span></li>
+  </ol>
+</section>
+
+<!-- 3 구분 1 -->
+<section class="slide divider">
+  <p class="kicker">1 · Trend</p>
+  <h1>Fable 5.2가<br>나왔습니다</h1>
+  <p>그래서 우리 업무 어디에 쓰면 좋을까요</p>
+</section>
+
+<!-- 4 Fable 5.2 -->
+<section class="slide">
+  <p class="kicker">News · 앤트로픽 · 11월 10일</p>
+  <h2>어려운 작업을 위한 모델, Fable 5.2</h2>
+  <div class="body">
+    <div class="col">
+      <div class="box"><span class="tag">공개</span><p>한국 시각 11월 10일 새벽 4시에 공개됐습니다.</p></div>
+      <div class="box"><span class="tag">속도</span><p>답하는 속도가 Fable 5.1보다 <b>최대 30%</b> 빠릅니다.</p></div>
+      <div class="box"><span class="tag">사용</span><p>유료 요금제는 Claude 앱과 Claude Code 모델 목록에서 바로 고릅니다. Pro는 주간 사용량의 50%까지 Fable을 씁니다.</p></div>
+    </div>
+    <div class="col">
+      <div class="box hot" style="flex:1;justify-content:center;display:flex;flex-direction:column">
+        <h3 style="font-size:34px">평소 업무에는<br>Opus 5.5를 먼저</h3>
+        <p style="margin-top:14px;font-size:24px">앤트로픽도 대부분의 업무는 Opus 5.5부터 쓰라고 권합니다. Fable은 시간이 오래 걸리는 어려운 작업에만 씁니다.</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>출처: 8회차 강의 자료(Seulki.log) 뉴스 1</span></div>
+</section>
+
+<!-- 5 같이 나온 기능 -->
+<section class="slide">
+  <p class="kicker">News · 함께 공개된 것</p>
+  <h2>새 기능 세 가지, 업무에 옮기면</h2>
+  <div class="body">
+    <div class="col box"><span class="tag">Docs · Sheets</span><h3>구글 문서와 시트를 직접 열어 읽고 고칩니다</h3><p class="sub">데이터가 바뀌면 숫자가 따라 바뀌는 대시보드도 만듭니다.</p><p style="margin-top:auto;font-size:21px"><b>우리 업무</b> 상담 기록 시트, 출결 · 수납 시트 정리</p></div>
+    <div class="col box"><span class="tag">ultrathink</span><h3>질문에 ultrathink를 붙이면 더 깊이 따져 봅니다</h3><p class="sub">Claude Code에서 어려운 문제를 풀 때 씁니다.</p><p style="margin-top:auto;font-size:21px"><b>우리 업무</b> 시험 범위 대조, 오류 원인 추적</p></div>
+    <div class="col box"><span class="tag">영상 편집</span><h3>채팅만으로 영상 색감을 보정하고 배경을 지웁니다</h3><p class="sub">영상 서비스 힉스필드를 연결해 쓰며 계정은 따로 필요합니다.</p><p style="margin-top:auto;font-size:21px"><b>우리 업무</b> 수업 영상, 홍보 숏폼</p></div>
+  </div>
+  <div class="foot"><span>세 기능 모두 Pro부터 · 힉스필드 광고 게시물 기준 소개</span></div>
+</section>
+
+<!-- 6 모델 배정 -->
+<section class="slide">
+  <p class="kicker">우리 업무 어디에 쓸까</p>
+  <h2>모델을 일에 맞게 나눠 쓰면 한도도 덜 닳습니다</h2>
+  <div style="margin-top:26px">
+  <table>
+    <tr><th style="width:150px">모델</th><th>맡기는 일</th><th style="width:360px">학원 업무 예</th></tr>
+    <tr><td class="acc">Fable 5.2</td><td>가장 어려운 판단, 사람이 놓치는 결함 찾기</td><td>순서 · 삽입 문항의 이의 심사</td></tr>
+    <tr><td>Opus 5.5</td><td>기본 모델. 판단과 창작</td><td>문항 출제, 해설, 학부모 안내문, 원인 모를 오류</td></tr>
+    <tr><td>Sonnet 5.5</td><td>기준이 정해진 확인과 반복</td><td>PDF 쪽마다 눈 검수, 카톡 · 회의록 요약</td></tr>
+    <tr><td>Haiku 5.5</td><td>판단 없는 조회</td><td>파일 찾기, 개수 세기, 목록 뽑기</td></tr>
+  </table></div>
+  <div class="foot"><span>제 작업 폴더의 실제 배정표를 줄인 것입니다</span></div>
+</section>
+
+<!-- 7 Fable 실제 사례 -->
+<section class="slide">
+  <p class="kicker">NY 사례 · 11월 17일</p>
+  <h2>저는 Fable을 이 한 자리에만 씁니다</h2>
+  <div class="body">
+    <div class="col" style="flex:1.1">
+      <p class="lead" style="margin:0">기말 빅북 문항 29개를 같은 조건으로 풀게 해 Fable과 Opus를 비교했습니다. 순서와 삽입 문항 가운데 결함이 있는 11개를 누가 잡는지 봤습니다.</p>
+      <ul class="d" style="margin-top:12px"><li>Fable만 잡은 3문항은 모두 순서 · 삽입의 복수 정답 배열</li><li>잘못 울린 경보는 Fable 0건, Opus 1건</li><li>출제는 그대로 Opus. 이의 심사에만 Fable을 더 붙임</li></ul>
+    </div>
+    <div class="col" style="flex:.9">
+      <div class="row"><div class="box"><div class="big">6<span style="font-size:44px;color:var(--sub)">/11</span></div><p class="cap">Fable이 잡은 결함</p></div><div class="box"><div class="big" style="color:var(--sub)">4<span style="font-size:44px">/11</span></div><p class="cap">Opus가 잡은 결함</p></div></div>
+      <div class="box line"><p style="font-size:21px"><b>결론</b> 모든 일에 Fable을 쓰지 않습니다. 정답 하나를 끝까지 따져야 하는 자리에만 씁니다.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>표본이 작은 한 번의 비교입니다. 방향을 보는 용도로 봐 주세요</span></div>
+</section>
+
+<!-- 8 구분 2 -->
+<section class="slide divider">
+  <p class="kicker">2 · 오늘 바로 해봅시다</p>
+  <h1>첫 강연 이후<br>2주가 흘렀습니다</h1>
+  <p>AI와 디스커션 많이 하셨나요</p>
+</section>
+
+<!-- 9 점검 질문 -->
+<section class="slide">
+  <p class="kicker">점검 · 2분</p>
+  <h2>지난 2주, 어디까지 해 보셨나요</h2>
+  <div class="body">
+    <div class="col">
+      <ul class="check">
+        <li>업무 하나를 정해 AI와 <b>끝까지 이야기</b>해 봤다</li>
+        <li>같은 일을 두 번째 시킬 때 <b>처음부터 설명하지 않았다</b></li>
+        <li>AI가 낸 결과를 <b>다른 눈으로 한 번 더</b> 확인했다</li>
+        <li>잘 된 방식을 <b>파일로 남겨 두었다</b></li>
+      </ul>
+    </div>
+    <div class="col">
+      <div class="box hot" style="flex:1;display:flex;flex-direction:column;justify-content:center">
+        <h3 style="font-size:32px">마지막 줄이 비어 있으면<br>매번 처음부터입니다</h3>
+        <p style="margin-top:14px;font-size:24px">AI는 어제 이야기를 기억하지 못합니다. 남겨 둔 파일, 즉 스킬이 있어야 내일의 AI가 오늘의 방식을 이어받습니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 스킬 갱신 흐름 -->
+<section class="slide">
+  <p class="kicker">실습 · 10분</p>
+  <h2>내 업무 스킬, 이렇게 업데이트합니다</h2>
+  <div class="body" style="gap:24px">
+    <div class="col box"><span class="tag">STEP 1</span><h3>일 하나 고르기</h3><p class="sub">매주 반복하고, 말로 설명할 수 있는 일을 하나만 고릅니다. 예: 시험 범위 안내문, 상담 후 학부모 정리 글</p></div>
+    <div class="col box"><span class="tag">STEP 2</span><h3>AI와 디스커션</h3><p class="sub">지난 2주 동안 고친 점, 매번 틀리는 점, 내가 결정하는 곳을 AI에게 말로 풀어 줍니다.</p></div>
+    <div class="col box"><span class="tag">STEP 3</span><h3>스킬 파일에 반영</h3><p class="sub">AI가 정리한 규칙을 기존 스킬에 덧붙이고, 같은 일을 한 번 더 시켜 달라졌는지 봅니다.</p></div>
+  </div>
+  <div class="foot"><span>새로 만들기보다 있는 스킬에 한 줄 보태는 쪽이 오래 갑니다</span></div>
+</section>
+
+<!-- 11 프롬프트 -->
+<section class="slide">
+  <p class="kicker">그대로 붙여 넣기</p>
+  <h2>클코에 이렇게 말해 보세요</h2>
+  <div style="margin-top:30px;display:flex;flex-direction:column;gap:20px">
+    <div class="prompt"><span class="lab">1 · 디스커션</span>내가 매주 하는 <b>(업무 이름)</b> 스킬을 같이 점검하고 싶어. 질문은 한 번에 하나씩 해 줘. 지난 2주 동안 내가 <b>고친 곳</b>, AI가 <b>자꾸 틀린 곳</b>, 내가 <b>직접 정해야 하는 곳</b>을 꼭 물어봐. 내가 '그냥'이라고 답하면 다시 물어봐.</div>
+    <div class="prompt"><span class="lab">2 · 반영</span>방금 이야기한 내용을 <b>기존 스킬 파일</b>에 반영해 줘. 지금 있는 내용은 지우지 말고, 바뀐 줄과 새로 생긴 줄을 먼저 보여 줘. 내가 말하지 않은 규칙은 지어내지 마.</div>
+  </div>
+</section>
+
+<!-- 12 구분 3 -->
+<section class="slide divider">
+  <p class="kicker">3 · Setup</p>
+  <h1>클코 세팅과<br>습관 바로잡기</h1>
+  <p>잘 쓰는 사람의 차이는 모델보다 세팅과 습관에서 납니다</p>
+</section>
+
+<!-- 13 세팅 -->
+<section class="slide">
+  <p class="kicker">세팅 · 한 번만 해 두면 됩니다</p>
+  <h2>폴더 하나에 기억을 모아 둡니다</h2>
+  <div class="body" style="gap:20px">
+    <div class="col">
+      <div class="box"><h3>CLAUDE.md</h3><p class="sub">클코가 대화마다 자동으로 읽는 지침서. 학원 소개, 말투, 지켜야 할 규칙, 결과물 저장 위치를 적습니다.</p></div>
+      <div class="box"><h3>스킬 폴더</h3><p class="sub">반복 업무의 순서와 기준을 업무별 파일로 둡니다. 여기가 오늘 실습한 곳입니다.</p></div>
+    </div>
+    <div class="col">
+      <div class="box"><h3>메모리</h3><p class="sub">'이건 이렇게 해 줘'라고 한 지적을 남깁니다. 같은 말을 두 번 하지 않게 됩니다.</p></div>
+      <div class="box"><h3>결과물 폴더</h3><p class="sub">만든 파일을 한 폴더에 모읍니다. 어디에 저장됐는지 찾는 시간이 사라집니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 습관 -->
+<section class="slide">
+  <p class="kicker">습관 · 다섯 줄</p>
+  <h2>이 다섯 가지만 지켜도 달라집니다</h2>
+  <div class="body" style="margin-top:28px">
+    <ul class="check" style="gap:16px">
+      <li><span><b>시작 전에 일의 범위를 한 줄로 말합니다.</b> 모호한 요청은 AI가 짐작해서 채웁니다.</span></li>
+      <li><span><b>원문과 자료는 내가 직접 줍니다.</b> 없으면 만들지 말고 없다고 말하게 합니다.</span></li>
+      <li><span><b>만든 AI에게 검수를 맡기지 않습니다.</b> 다른 세션이나 다른 모델로 다시 봅니다.</span></li>
+      <li><span><b>한 묶음이 끝나면 새 대화로 넘어갑니다.</b> 대화가 길어지면 앞 내용을 놓치고 한도도 빨리 닳습니다.</span></li>
+      <li><span><b>보내기 · 삭제 · 결제는 내가 확인한 뒤에만.</b> 되돌릴 수 없는 일은 사람이 누릅니다.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 15 구분 4 -->
+<section class="slide divider">
+  <p class="kicker">4 · NY's Case Study</p>
+  <h1>이번 달에<br>의미 있었던 시도</h1>
+  <p>프로그램 없이 입반 테스트지로 정확하게 입반시키기</p>
+</section>
+
+<!-- 16 문제와 목표 -->
+<section class="slide">
+  <p class="kicker">Case · 문제</p>
+  <h2>입반 테스트, 시험지만 있고 판정은 사람 몫이었습니다</h2>
+  <div class="body">
+    <div class="col">
+      <div class="box"><h3>이렇게 하고 싶었습니다</h3>
+        <ul class="d" style="margin-top:8px"><li>점수 하나를 넘어 <b>어느 반에 들어가야 하는지</b>까지 자동 판정</li><li>입반이 안 되면 <b>무엇을 공부하고 다시 오라</b>는 처방</li><li>시험지, 채점, 분석지를 별도 프로그램 구매 없이</li></ul></div>
+    </div>
+    <div class="col">
+      <div class="box hot" style="flex:1;display:flex;flex-direction:column;justify-content:center">
+        <h3 style="font-size:32px">방법은<br>시험지부터 거꾸로 설계</h3>
+        <p style="margin-top:14px;font-size:24px">문항 하나하나가 어떤 문법 항목을 재는지 먼저 정하고, 문항 번호에서 판정까지 이어지게 만들었습니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 17 시험지 구조 -->
+<section class="slide">
+  <p class="kicker">Case · 시험지</p>
+  <h2>학년마다 한 벌, 50문항 60분 전부 객관식</h2>
+  <div class="body" style="margin-top:28px;gap:20px">
+    <div class="col">
+      <div class="row">
+        <div class="box"><div class="big" style="font-size:72px">3+1</div><p class="cap">중1 · 중2 · 중3 시험지와 고1 입반 테스트</p></div>
+        <div class="box"><div class="big" style="font-size:72px">50</div><p class="cap">문항, 60분 모두에게 같은 시간</p></div>
+      </div>
+      <div class="box line"><h3>문항 설계표</h3><p class="sub" style="font-size:22px">문항마다 영역(어휘 · 문법 · 독해 · 서술형), 층(기초 · 표준 · 심화), 교재 단원을 붙여 둡니다.</p></div>
+    </div>
+    <div class="col">
+      <div class="box line"><h3>같은 시험으로 두 번 씁니다</h3><p class="sub" style="font-size:22px">재원생이 먼저 보고 기준점을 조정하고, 그 뒤 신규 학생의 입반 테스트로 씁니다.</p></div>
+      <div class="box line"><h3>빨리 푼 것은 역량으로 보지 않습니다</h3><p class="sub" style="font-size:22px">모든 학생에게 60분을 다 주고, 걸린 시간은 분석에서 뺐습니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 18 판정 -->
+<section class="slide">
+  <p class="kicker">Case · 판정</p>
+  <h2>영역별 기준선으로 반을 제안합니다</h2>
+  <div style="margin-top:26px">
+  <table>
+    <tr><th style="width:250px">결과</th><th>판정</th></tr>
+    <tr><td>자기 학년 기초층 통과</td><td>Core 또는 Top 반 제안. 영역별 기준선을 함께 봅니다</td></tr>
+    <tr><td>기초층 일부 미달</td><td>아래 학년 반을 제안하고, 처방 후 재응시 길도 함께 안내</td></tr>
+    <tr><td>만점권</td><td>다음 학년 시험을 추가로 보게 해 월반 여부를 검토</td></tr>
+    <tr><td>가장 아래 학년이 미달</td><td>입반 불가. 1~3개월 학습 처방을 주고 다시 오도록 안내</td></tr>
+  </table></div>
+  <div class="foot"><span>기준선은 재원생 응시 결과로 계속 보정합니다</span></div>
+</section>
+
+<!-- 19 과정 -->
+<section class="slide">
+  <p class="kicker">Case · 과정</p>
+  <h2>이렇게 5일 만에 만들었습니다</h2>
+  <div class="tl">
+    <div><b>11월 12일</b><span>학년 구성과 방식 결정, 중1용 출제 설계표 승인, 60문항 출제</span></div>
+    <div><b>11월 13일</b><span>중2 · 중3 출제, 교재 단원과 실물 PDF 대조, 채점기와 분석지 시안</span></div>
+    <div><b>11월 14일</b><span>50문항으로 조정, 시험지 A3 중철 8쪽, 표지 확정</span></div>
+    <div><b>11월 16일</b><span>고1 입반 테스트 50문항 출제, 3월 학평 4등급을 입반선으로</span></div>
+  </div>
+</section>
+
+<!-- 20 검수 -->
+<section class="slide">
+  <p class="kicker">Case · 검수</p>
+  <h2>문제는 낸 AI와 다른 AI가 풀어 봅니다</h2>
+  <div class="body">
+    <div class="col">
+      <ul class="d">
+        <li>출제한 쪽이 아닌 <b>두 모델</b>이 정답을 모르는 상태로 전 문항을 풉니다</li>
+        <li>중1 · 중2 · 중3 · 고1 모두 정답이 <b>전부 일치</b>할 때까지 고칩니다</li>
+        <li>선지마다 <b>왜 틀렸는지</b> 진단 문장을 붙여 오답 원인까지 분석지에 실었습니다</li>
+      </ul>
+    </div>
+    <div class="col">
+      <div class="box hot"><h3>그래서 분석지가 나옵니다</h3><p style="margin-top:8px;font-size:23px">A3 접지 4쪽. 진단 결과, 문법 지도와 오답 원인, 학습 계획과 반 교재 구성이 학생마다 자동으로 채워집니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 21 가져가세요 -->
+<section class="slide">
+  <p class="kicker">Case · 내 업무로 옮기면</p>
+  <h2>학원마다 이 순서면 만들 수 있습니다</h2>
+  <div class="body" style="gap:20px">
+    <div class="col box"><span class="tag">1</span><h3>판정 기준을 먼저 글로</h3><p class="sub">어느 반에 누구를 넣는지 말로 정해 둡니다. 시험은 그 뒤입니다.</p></div>
+    <div class="col box"><span class="tag">2</span><h3>문항마다 재는 것 붙이기</h3><p class="sub">번호에서 영역, 층, 교재 단원으로 이어지는 표를 만듭니다.</p></div>
+    <div class="col box"><span class="tag">3</span><h3>다른 AI로 풀어 보기</h3><p class="sub">정답이 하나인지 만든 사람이 아닌 눈으로 확인합니다.</p></div>
+    <div class="col box"><span class="tag">4</span><h3>첫 학생에게 쓰고 고치기</h3><p class="sub">기준선은 실제 결과로 보정합니다. 처음부터 완벽하지 않아도 됩니다.</p></div>
+  </div>
+</section>
+
+<!-- 22 구분 5 -->
+<section class="slide divider">
+  <p class="kicker">5 · 이번 주 Q&amp;A</p>
+  <h1>회사 컴퓨터와<br>집 노트북,<br>어떻게 연동하죠?</h1>
+</section>
+
+<!-- 23 답 -->
+<section class="slide">
+  <p class="kicker">Q&amp;A</p>
+  <h2>GitHub가 있습니다. 추천은 그다지 하지 않습니다</h2>
+  <div class="body">
+    <div class="col">
+      <div class="box"><h3>GitHub로 할 수는 있습니다</h3><p class="sub" style="font-size:22px">작업 폴더를 저장소로 만들어 한쪽에서 올리고 다른 쪽에서 받는 방식입니다.</p></div>
+      <div class="box"><h3>그런데 학원 업무에는 무겁습니다</h3>
+        <ul class="d" style="margin-top:6px"><li style="font-size:21px">올리기와 받기를 매번 직접 해야 하고, 두 곳을 동시에 고치면 충돌이 납니다</li><li style="font-size:21px">PDF와 이미지처럼 큰 파일에는 맞지 않습니다</li><li style="font-size:21px">학생 정보와 비밀번호 파일이 실수로 올라갈 위험이 있습니다</li></ul></div>
+    </div>
+    <div class="col">
+      <div class="box hot"><h3>제 추천</h3>
+        <ul class="d" style="margin-top:8px"><li style="font-size:23px;color:var(--on-accent)">작업 폴더 전체는 <b>클라우드 폴더</b>(구글 드라이브, 원드라이브 등)로 자동 동기화</li><li style="font-size:23px;color:var(--on-accent)">CLAUDE.md와 스킬 파일은 같은 폴더 안에 두어 두 컴퓨터가 <b>같은 기억</b>을 쓰게 합니다</li></ul></div>
+      <div class="box line"><p style="font-size:21px"><b>하나는 꼭</b> 한 번에 한 컴퓨터에서만 열어 두기. 같은 파일을 두 곳에서 동시에 고치지 않습니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 24 마무리 -->
+<section class="slide">
+  <p class="kicker">오늘의 숙제</p>
+  <h1 style="font-size:64px">오늘 밤 안에<br>스킬 하나, <span class="acc">한 줄만</span> 보태 보세요</h1>
+  <ul class="check" style="margin-top:40px;gap:12px">
+    <li>업무 하나를 골라 AI와 디스커션 시작하기</li>
+    <li>고칠 점 한 줄을 기존 스킬 파일에 반영하기</li>
+    <li>같은 일을 한 번 더 시켜 보고, 달라진 점을 단톡에 남기기</li>
+  </ul>
+  <div class="foot"><span>수고 많으셨습니다</span><span>너희가 꽃이다 AX</span></div>
+</section>
+
+</div></div>
+
+<div id="ui"><button id="prev" aria-label="이전">이전</button><span id="pos">1 / 1</span><button id="next" aria-label="다음">다음</button></div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide')),n=slides.length,cur=0,stage=document.getElementById('stage');
+  function fit(){var w=window.innerWidth-32,h=window.innerHeight-56,s=Math.min(w/1920,h/1080);stage.style.transform='scale('+s+')';}
+  function show(i){cur=Math.max(0,Math.min(n-1,i));slides.forEach(function(s,k){s.classList.toggle('on',k===cur)});
+    document.getElementById('pos').textContent=(cur+1)+' / '+n;
+    try{history.replaceState(null,'','#s'+(cur+1))}catch(e){}}
+  function go(d){show(cur+d)}
+  document.getElementById('prev').onclick=function(){go(-1)};
+  document.getElementById('next').onclick=function(){go(1)};
+  document.addEventListener('keydown',function(e){
+    if(['ArrowRight','PageDown',' ','Enter'].indexOf(e.key)>-1){e.preventDefault();go(1)}
+    else if(['ArrowLeft','PageUp','Backspace'].indexOf(e.key)>-1){e.preventDefault();go(-1)}
+    else if(e.key==='Home')show(0);else if(e.key==='End')show(n-1)});
+  stage.addEventListener('click',function(e){var r=stage.getBoundingClientRect();go(e.clientX>r.left+r.width/2?1:-1)});
+  var tx=null;document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX},{passive:true});
+  document.addEventListener('touchend',function(e){if(tx===null)return;var d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>50)go(d<0?1:-1);tx=null});
+  window.addEventListener('resize',fit);
+  function fromHash(){var m=/^#s(\d+)$/.exec(location.hash);show(m?parseInt(m[1],10)-1:0)}
+  window.addEventListener('hashchange',fromHash);
+  fit();fromHash();
+})();
+</script>
+
+</body>
+</html>
